@@ -1,0 +1,10 @@
+{
+  "name": "wcc12-08-2016",
+  "version": "0.0.0",
+  "description": "WCC12-08-2016",
+  "main": "server.js",
+  "author": {
+    "name": "Muni Swetha",
+    "email": ""
+  }
+}

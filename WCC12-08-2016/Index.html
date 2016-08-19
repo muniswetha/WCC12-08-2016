@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js">
+    </script>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        textarea {
+                    resize: none;
+                 }
+    </style>
+    <script>
+        var app = angular.module("CipherApp", []);
+        app.controller("EncryptionController", function ($scope, $http) {
+            $scope.totalChars = 0;
+            $scope.totalCharsWithoutSpace = 0;
+            $scope.totalSpaceChars = 0;
+            $scope.encryptedText = "";
+            $scope.errorMessage = "";
+            $scope.startTime = "";
+            $scope.endTime = "";
+            $scope.UpdateStatistics = function (keyEvent, value) {
+                $scope.startTime = "";
+                $scope.endTime = "";
+                if (keyEvent.keyCode != 8 && $scope.totalCharsWithoutSpace < 81) {
+                    $scope.totalChars++;
+                    if (keyEvent.keyCode == 32) {
+                        $scope.totalSpaceChars++;
+                    }
+                }
+                else if (keyEvent.keyCode == 8 && value.length > 0) {
+                    $scope.validationErrorMessage = "";
+                    $scope.totalChars--;
+                    if (value.charCodeAt(value.length - 1) == 32) {
+                        $scope.totalSpaceChars--;
+                    }
+                }
+                else {
+                    keyEvent.preventDefault();
+                    $scope.validationErrorMessage = "Maximum Number of characters without spaces is 81";
+                }
+                $scope.totalCharsWithoutSpace = $scope.totalChars - $scope.totalSpaceChars;
+            };
+            $displayResultText = "";
+            $scope.disable = "true";
+            $scope.getEncryptedText = function () {
+                $http({
+                    method: "GET",
+                    url: "/encryptMessage?message=" + $scope.encryptTextInput
+                }).then(function mySucces(response) {
+                    $scope.encryptedText = "Encrypted Text :   " + response.data.finalEncryptedText;
+                    $scope.startTime = "Execution Start Time: " + response.data.startTime;
+                    $scope.endTime = "Execution End Time: " + response.data.endTime;
+                }, function myError(response) {
+                    $scope.errorMessage = response.statusText;
+                });
+            };
+            $scope.setInputForUnitTest1 = function()
+            {
+                $scope.encryptTextInput = "if man was meant to stay on the ground god would have given us roots";
+                $scope.totalChars = $scope.encryptTextInput.length;
+                $scope.totalSpaceChars = $scope.encryptTextInput.split(" ").length - 1;
+                $scope.totalCharsWithoutSpace = $scope.totalChars - $scope.totalSpaceChars;
+                $scope.startTime = "";
+                $scope.endTime = "";
+            };
+            $scope.setInputForUnitTest2 = function () {
+                $scope.encryptTextInput = "have a nice day";
+                $scope.totalChars = $scope.encryptTextInput.length;
+                $scope.totalSpaceChars = $scope.encryptTextInput.split(" ").length - 1;
+                $scope.totalCharsWithoutSpace = $scope.totalChars - $scope.totalSpaceChars;
+                $scope.startTime = "";
+                $scope.endTime = "";
+            };
+        });
+        app.controller("DecryptionController", function ($scope, $http) {
+            $scope.startTime = "";
+            $scope.endTime = "";
+            $scope.decryptedText = "";
+            $scope.errorMessage = "";
+            $scope.getDecryptedText = function () {
+                $http({
+                    method: "GET",
+                    url: "/decryptMessage?message=" + $scope.decryptTextInput
+                }).then(function mySucces(response) {
+                    $scope.decryptedText = "Encrypted Text :   " + response.data.decryptedText;
+                    $scope.startTime = "Execution Start Time: " + response.data.startTime;
+                    $scope.endTime = "Execution End Time: " + response.data.endTime;
+                }, function myError(response) {
+                    $scope.errorMessage = response.statusText;
+                });
+            };
+            $scope.setInputForUnitTest1 = function () {
+                $scope.decryptTextInput = "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau numsp 3 6 9 14 16 20 22 25 31 34 39 43 48 50";
+                $scope.startTime = "";
+                $scope.endTime = "";
+            };
+            $scope.setInputForUnitTest2 = function () {
+                $scope.decryptTextInput = "hae and via ecy numsp 5 6 10";
+                $scope.startTime = "";
+                $scope.endTime = "";
+            };
+        });
+    </script>
+</head>
+<body ng-app="CipherApp">
+    <h1>Encrypt Text</h1>
+    <table ng-controller="EncryptionController" cellspacing="10">
+        <tr>
+            <td rowspan="2" style="width:45%">
+                <textarea name="EncryptTextInput" rows="5" cols ="50" ng-model="encryptTextInput" style="width:100%" ng-trim="false" placeholder="Please Enter Text to Encrypt" ng-keydown="UpdateStatistics($event,encryptTextInput)"></textarea><br />
+                {{validationErrorMessage}}
+            </td>
+            <td>No.Of Characters in Text: {{totalChars}}</td>
+        </tr>
+        <tr><td>No.Of Characters excluding spaces in Text: {{totalCharsWithoutSpace}}</td></tr>
+        <tr><td colspan="2"><input type="button" ng-disabled="totalCharsWithoutSpace == 0" name="EncryptMessage" ng-click="getEncryptedText()" value="Encrypt Message"/>
+                            <input type="button" name="EncryptMessage" ng-click="setInputForUnitTest1()" value="Unit Test 1"/>
+                            <input type="button" name="EncryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/>
+            </td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold"> {{encryptedText}} </p>
+                <p style="width:100%; color:red">{{errorMessage}}</p></td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{startTime}}</p></td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{endTime}}</p></td></tr>
+    </table>
+
+    <h1>Decrypt Text</h1>
+    <table ng-controller="DecryptionController" cellspacing="10">
+        <tr>
+            <td style="width:45%">
+                <textarea name="EncryptTextInput" rows="5" cols ="50" ng-model="decryptTextInput" style="width:100%" ng-trim="false" placeholder="Please Enter Text to Decrypt"></textarea><br />
+                {{validationErrorMessage}}
+            </td>
+            <td></td>
+        </tr>
+        <tr><td colspan="2"><input type="button" ng-disabled="totalCharsWithoutSpace == 0" name="EncryptMessage" ng-click="getDecryptedText()" value="Decrypt Message"/>
+            <input type="button" name="DecryptMessage" ng-click="setInputForUnitTest1()" value="Unit Test 1"/>
+            <input type="button" name="DecryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/></td>
+        </tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold"> {{decryptedText}} </p>
+                <p style="width:100%; color:red">{{errorMessage}}</p></td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{startTime}}</p></td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{endTime}}</p></td></tr>
+    </table>
+</body>
+</html>
