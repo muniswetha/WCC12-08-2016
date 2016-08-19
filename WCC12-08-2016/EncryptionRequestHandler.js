@@ -1,15 +1,16 @@
 ﻿function encryptMessage(postData, res) {
 
     var message = postData.message;
-    var msgAfterRemovingSpaces = []
+    var msgAfterRemovingSpaces = [];
     var timer = new Date();
     var ecncryptedTextObject = {};
 
     ecncryptedTextObject.startTime = timer.getHours() + ":" + timer.getMinutes() + ":" + timer.getSeconds() + ":" + timer.getMilliseconds();
     //validating length of characters in text without spaces is done from client side
     var numsp = "numsp";
+    var i;
     for (i = 0; i < message.length; i++) {
-        if (message.charCodeAt(i) != 32) {
+        if (message.charCodeAt(i) !== 32) {
             msgAfterRemovingSpaces.push(message[i]);
         }
         else {
@@ -22,7 +23,7 @@
     var ecncryptedText = "";
 
     for (i = 0; i < virtualArraySize.columnSize; i++) {
-        for (j = 0; (j < virtualArraySize.rowSize && (i + (virtualArraySize.columnSize * j) < msgAfterRemovingSpaces.length)); j++) {
+        for (var j = 0; (j < virtualArraySize.rowSize && (i + (virtualArraySize.columnSize * j) < msgAfterRemovingSpaces.length)); j++) {
             ecncryptedText = ecncryptedText + msgAfterRemovingSpaces[i + (virtualArraySize.columnSize * j)];
         }
         ecncryptedText = ecncryptedText + " ";
@@ -46,7 +47,14 @@ var getVirtualMatrixSize = function (noOfCharsInMessage)
 {
     var rowSize = Math.floor(Math.sqrt(noOfCharsInMessage));
     var columnSize = Math.ceil(Math.sqrt(noOfCharsInMessage));
-    return {rowSize: rowSize, columnSize : columnSize};
+    while (rowSize * columnSize < noOfCharsInMessage) {
+        if (rowSize > columnSize)
+            columnSize++;
+        else {
+            rowSize++;
+        }
+    }
+    return { rowSize: rowSize, columnSize : columnSize }; 
 }
 
 

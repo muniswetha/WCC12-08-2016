@@ -21,9 +21,12 @@
             $scope.errorMessage = "";
             $scope.startTime = "";
             $scope.endTime = "";
+            $scope.virtualArraySize = "";
             $scope.UpdateStatistics = function (keyEvent, value) {
                 $scope.startTime = "";
                 $scope.endTime = "";
+                $scope.encryptedText = "";
+                $scope.virtualArraySize = "";
                 if (keyEvent.keyCode != 8 && $scope.totalCharsWithoutSpace < 81) {
                     $scope.totalChars++;
                     if (keyEvent.keyCode == 32) {
@@ -53,6 +56,7 @@
                     $scope.encryptedText = "Encrypted Text :   " + response.data.finalEncryptedText;
                     $scope.startTime = "Execution Start Time: " + response.data.startTime;
                     $scope.endTime = "Execution End Time: " + response.data.endTime;
+                    $scope.virtualArraySize = "Matrix Size : " + response.data.virtualArraySize.rowSize + ' X ' + response.data.virtualArraySize.columnSize;
                 }, function myError(response) {
                     $scope.errorMessage = response.statusText;
                 });
@@ -74,6 +78,16 @@
                 $scope.startTime = "";
                 $scope.endTime = "";
             };
+            $scope.ResetEncryptText = function() {
+                $scope.encryptTextInput = "";
+                $scope.encryptedText = "";
+                $scope.totalChars = 0;
+                $scope.totalSpaceChars = 0;
+                $scope.totalCharsWithoutSpace = 0;
+                $scope.startTime = "";
+                $scope.endTime = "";
+                $scope.virtualArraySize = "";
+            }
         });
         app.controller("DecryptionController", function ($scope, $http) {
             $scope.startTime = "";
@@ -102,6 +116,12 @@
                 $scope.startTime = "";
                 $scope.endTime = "";
             };
+            $scope.ResetDecryptText = function () {
+                $scope.decryptTextInput = "";
+                $scope.startTime = "";
+                $scope.endTime = "";
+                $scope.decryptedText = "";
+            }
         });
     </script>
 </head>
@@ -118,10 +138,13 @@
         <tr><td>No.Of Characters excluding spaces in Text: {{totalCharsWithoutSpace}}</td></tr>
         <tr><td colspan="2"><input type="button" ng-disabled="totalCharsWithoutSpace == 0" name="EncryptMessage" ng-click="getEncryptedText()" value="Encrypt Message"/>
                             <input type="button" name="EncryptMessage" ng-click="setInputForUnitTest1()" value="Unit Test 1"/>
-                            <input type="button" name="EncryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/>
+            <input type="button" name="EncryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/>
+            <input type="button" name="EncryptMessageReset" ng-click="ResetEncryptText()" value="Reset"/>
             </td></tr>
-        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold"> {{encryptedText}} </p>
-                <p style="width:100%; color:red">{{errorMessage}}</p></td></tr>
+        <tr><td colspan="2">
+            <p style="font-size: medium; font-weight: bold"> {{encryptedText}} </p>
+            <p style="width: 100%; color: red">{{errorMessage}}</p></td></tr>
+        <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{virtualArraySize}}</p></td></tr>
         <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{startTime}}</p></td></tr>
         <tr><td colspan="2"><p style="font-size:medium; font-weight:bold">{{endTime}}</p></td></tr>
     </table>
@@ -137,7 +160,9 @@
         </tr>
         <tr><td colspan="2"><input type="button" ng-disabled="totalCharsWithoutSpace == 0" name="EncryptMessage" ng-click="getDecryptedText()" value="Decrypt Message"/>
             <input type="button" name="DecryptMessage" ng-click="setInputForUnitTest1()" value="Unit Test 1"/>
-            <input type="button" name="DecryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/></td>
+                <input type="button" name="DecryptMessage" ng-click="setInputForUnitTest2()" value="Unit Test 2"/>
+            <input type="button" name="DecryptMessageReset" ng-click="ResetDecryptText()" value="Reset"/>
+            </td>
         </tr>
         <tr><td colspan="2"><p style="font-size:medium; font-weight:bold"> {{decryptedText}} </p>
                 <p style="width:100%; color:red">{{errorMessage}}</p></td></tr>
