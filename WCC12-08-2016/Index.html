@@ -67,6 +67,8 @@
                 $scope.totalCharsWithoutSpace = $scope.totalChars - $scope.totalSpaceChars;
                 $scope.startTime = "";
                 $scope.endTime = "";
+                $scope.encryptedText = "";
+                $scope.virtualArraySize = "";
             };
             $scope.setInputForUnitTest2 = function () {
                 $scope.encryptTextInput = "have a nice day";
@@ -75,6 +77,8 @@
                 $scope.totalCharsWithoutSpace = $scope.totalChars - $scope.totalSpaceChars;
                 $scope.startTime = "";
                 $scope.endTime = "";
+                $scope.encryptedText = "";
+                $scope.virtualArraySize = "";
             };
             $scope.ResetEncryptText = function() {
                 $scope.encryptTextInput = "";
@@ -97,9 +101,9 @@
                     method: "GET",
                     url: "/decryptMessage?message=" + $scope.decryptTextInput
                 }).then(function mySucces(response) {
-                    $scope.decryptedText = "Encrypted Text :   " + response.data.decryptedText;
-                    $scope.startTime = "Execution Start Time: " + response.data.startTime;
-                    $scope.endTime = "Execution End Time: " + response.data.endTime;
+                    $scope.decryptedText = "Decrypted Text :   " + response.data.decryptedText;
+                    $scope.startTime = "Decryption Start Time: " + response.data.startTime;
+                    $scope.endTime = "Decryption End Time: " + response.data.endTime;
                 }, function myError(response) {
                     $scope.errorMessage = response.statusText;
                 });
@@ -108,11 +112,13 @@
                 $scope.decryptTextInput = "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau numsp 3 6 9 14 16 20 22 25 31 34 39 43 48 50";
                 $scope.startTime = "";
                 $scope.endTime = "";
+                $scope.decryptedText = "";
             };
             $scope.setInputForUnitTest2 = function () {
                 $scope.decryptTextInput = "hae and via ecy numsp 5 6 10";
                 $scope.startTime = "";
                 $scope.endTime = "";
+                $scope.decryptedText = "";
             };
             $scope.ResetDecryptText = function () {
                 $scope.decryptTextInput = "";

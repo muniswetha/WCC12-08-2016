@@ -90,9 +90,11 @@
                 decryptedText = decryptedText + decryptMessageArray[i][j];
                 parsedMessageLength++;
             }
-            if (spacePosition != null && parsedMessageLength == spacePosition - 1) {
-                decryptedText = decryptedText + " ";
-                spacePosition = spacePositions.pop();
+            if (spacePosition != null && parsedMessageLength === spacePosition - 1) {
+                do {
+                    decryptedText = decryptedText + " ";
+                    spacePosition = spacePositions.pop();
+                } while (parsedMessageLength === spacePosition - 1);
             }
         }
     }
