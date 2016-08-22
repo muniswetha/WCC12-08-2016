@@ -86,7 +86,7 @@
                 decryptedText = decryptedText + decryptMessageArray[i][j - k];
                 parsedMessageLength++;
             }
-            else if(i-k > 0){
+            else if(i-k-1 > 0){
                 decryptedText = decryptedText + decryptMessageArray[i][j];
                 parsedMessageLength++;
             }
